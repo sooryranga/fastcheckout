@@ -27,7 +27,7 @@ export function PermissionsScreen({navigation}: Props): React.ReactElement {
     if (cameraPermissionStatus === 'authorized') {
       navigation.replace('CameraPage');
     }
-  }, [cameraPermissionStatus, microphonePermissionStatus, navigation]);
+  }, [cameraPermissionStatus, navigation]);
 
   return (
     <View style={styles.container}>
