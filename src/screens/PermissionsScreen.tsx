@@ -7,7 +7,7 @@ import {Camera, CameraPermissionStatus} from 'react-native-vision-camera';
 import {CONTENT_SPACING, SAFE_AREA_PADDING} from '@app/constants';
 import type {Routes} from '@app/routes';
 
-type Props = NativeStackScreenProps<Routes, 'PermissionsScreen'>;
+type Props = NativeStackScreenProps<Routes, 'Permissions'>;
 export function PermissionsScreen({navigation}: Props): React.ReactElement {
   const [cameraPermissionStatus, setCameraPermissionStatus] =
     useState<CameraPermissionStatus>('not-determined');
@@ -25,13 +25,13 @@ export function PermissionsScreen({navigation}: Props): React.ReactElement {
 
   useEffect(() => {
     if (cameraPermissionStatus === 'authorized') {
-      navigation.replace('CameraPage');
+      navigation.navigate('Home', {screen: 'Camera'});
     }
   }, [cameraPermissionStatus, navigation]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome to{'\n'}Vision Camera.</Text>
+      <Text style={styles.welcome}>Welcome to{'\n'}FastCheckout.</Text>
       <View style={styles.permissionsContainer}>
         {cameraPermissionStatus !== 'authorized' && (
           <Text style={styles.permissionText}>

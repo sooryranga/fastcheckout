@@ -1,8 +1,12 @@
+import {NavigatorScreenParams} from '@react-navigation/native';
+
 export type Routes = {
-  PermissionsPage: undefined;
-  CameraPage: undefined;
-  MediaPage: {
-    path: string;
-    type: 'video' | 'photo';
-  };
+  Permissions: undefined;
+  Home: NavigatorScreenParams<BottomTabParamList>;
+};
+
+export type BottomTabParamList = {
+  Camera: undefined;
+  Profile: undefined;
+  Cart: undefined;
 };
