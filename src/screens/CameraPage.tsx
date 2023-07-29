@@ -17,7 +17,11 @@ import {
   VideoFile,
 } from 'react-native-vision-camera';
 import {Camera, frameRateIncluded} from 'react-native-vision-camera';
-import {CONTENT_SPACING, MAX_ZOOM_FACTOR, SAFE_AREA_PADDING} from '@app/constants';
+import {
+  CONTENT_SPACING,
+  MAX_ZOOM_FACTOR,
+  SAFE_AREA_PADDING,
+} from '@app/constants';
 import Reanimated, {
   Extrapolate,
   interpolate,
