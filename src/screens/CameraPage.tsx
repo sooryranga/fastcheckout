@@ -18,6 +18,8 @@ import {scanBarcodes, BarcodeFormat, Barcode} from 'vision-camera-code-scanner';
 import {SAFE_AREA_PADDING} from '@app/constants';
 import type {CompositeScreenProps} from '@react-navigation/native';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {useDispatch} from 'react-redux';
+import {addWithBarcode} from '@app/constants/cartReducers';
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
@@ -31,6 +33,7 @@ type CameraPageNavigationProp = CompositeScreenProps<
 export function CameraPage({}: CameraPageNavigationProp): React.ReactElement {
   const camera = useRef<Camera>(null);
 
+  const dispatch = useDispatch();
   // check if camera page is active
   const isFocussed = useIsFocused();
   const isForeground = useIsForeground();
@@ -50,6 +53,7 @@ export function CameraPage({}: CameraPageNavigationProp): React.ReactElement {
     if (detectedBarcodes.length > 0) {
       console.log('scanned barcodes 2', detectedBarcodes);
       runOnJS(setBarcodes)(detectedBarcodes);
+      dispatch(addWithBarcode(detectedBarcodes[0].displayValue));
     }
   }, []);
 

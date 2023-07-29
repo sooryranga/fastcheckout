@@ -1,15 +1,7 @@
-import React, {useState} from 'react'
-
-import {View, Text, Image, StyleSheet, Pressable} from 'react-native'
-import {IconInCircle} from '../screens/AddSubicon'
-
-type CartItem = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  quantity: number;
-};
+import React from 'react';
+import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
+import {IconInCircle} from '../screens/AddSubicon';
+import type {CartItem} from '@app/components/types';
 
 interface CartItemProps {
   id: string;
@@ -32,16 +24,12 @@ const RenderCartItem: React.FC<CartItemProps> = ({
   onIncrement,
   onDecrement,
 }) => {
-  const [localQuantity, setLocalQuantity] = useState(quantity);
-
   const handleIncrement = () => {
-    setLocalQuantity(localQuantity + 1);
     onIncrement(id);
   };
 
   const handleDecrement = () => {
-    if (localQuantity > 1) {
-      setLocalQuantity(localQuantity - 1);
+    if (quantity > 0) {
       onDecrement(id);
     } else {
       onRemove(id);
@@ -53,19 +41,21 @@ const RenderCartItem: React.FC<CartItemProps> = ({
       <View style={styles.imageBox}>
         <Image style={styles.image} source={{uri: image}} />
       </View>
-      <View style={styles.detailsContainer}>
-        <Text adjustsFontSizeToFit={true} style={styles.title}>
-          {name}
-        </Text>
+      <View style={styles.nameContainer}>
+        <View style={styles.titleContainer}>
+          <Text adjustsFontSizeToFit={true} style={styles.title}>
+            {name}
+          </Text>
+        </View>
         <Text style={styles.subtitle}>Other stuff</Text>
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.price}>${price.toFixed(2)}</Text>
         <View style={styles.counter}>
           <Pressable onPress={handleDecrement}>
-            {({pressed}) => (
+            {() => (
               <IconInCircle
-                name="minus"
+                name="-"
                 size={10}
                 color="black"
                 borderWidth={1}
@@ -75,9 +65,9 @@ const RenderCartItem: React.FC<CartItemProps> = ({
           </Pressable>
           <Text style={styles.count}>{quantity}</Text>
           <Pressable onPress={handleIncrement}>
-            {({pressed}) => (
+            {() => (
               <IconInCircle
-                name="plus"
+                name="+"
                 size={10}
                 color="black"
                 borderWidth={1}
@@ -93,25 +83,43 @@ const RenderCartItem: React.FC<CartItemProps> = ({
 
 const styles = StyleSheet.create({
   cartItems: {
-    margin: 'auto',
-    marginBottom: '20px',
     width: '100%',
     height: 120,
+    marginBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   imageBox: {
-    width: '25%',
+    width: 120,
+    height: 120,
+    borderWidth: 2,
+    borderRadius: 25,
+    borderColor: '#ccc',
+    overflow: 'hidden',
+  },
+  image: {
+    width: 116,
+    height: 116,
+    resizeMode: 'cover',
+  },
+  nameContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
   },
   detailsContainer: {
-    height: 100,
-    width: '40%',
     alignItems: 'center',
+    marginBottom: 10,
+    paddingRight: 5,
+  },
+  titleContainer: {
+    flexDirection: 'row',
   },
   title: {
+    flex: 1,
+    flexWrap: 'wrap',
     paddingTop: 5,
-    fontSize: 20,
+    fontSize: 23,
     fontWeight: '800',
     color: '#202020',
   },
@@ -125,47 +133,23 @@ const styles = StyleSheet.create({
     width: 'auto',
     display: 'flex',
     justifyContent: 'space-between',
-    margin: 10,
-  },
-  btn: {
-    width: '40px',
-    height: '40px',
-    backgroundColor: '#d9d9d9',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: 20,
-    fontWeight: '900',
-    color: '#202020',
+    marginTop: 5,
   },
   count: {
+    width: 35,
     marginLeft: 5,
     marginRight: 5,
-    fontSize: 20,
+    fontSize: 17,
+    textAlign: 'center',
     fontWeight: '900',
     color: '#202020',
   },
-
   container: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-  },
-  imageContainer: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    marginRight: 10,
-  },
-  image: {
-    display: 'flex',
-    bottom: 30,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: 70,
-    height: 70,
-    resizeMode: 'cover',
   },
   name: {
     fontSize: 16,
@@ -179,10 +163,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justify: 'right',
     marginTop: 10,
-  },
-  quantity: {
-    fontSize: 16,
-    marginHorizontal: 10,
   },
 });
 

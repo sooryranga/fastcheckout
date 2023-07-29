@@ -6,6 +6,8 @@ import {PermissionsScreen} from '@app/screens/PermissionsScreen';
 import {Home} from '@app/screens/Home';
 import type {Routes} from '@app/routes';
 import {Camera, CameraPermissionStatus} from 'react-native-vision-camera';
+import {Provider} from 'react-redux';
+import {store} from '@app/constants/store';
 
 const Stack = createNativeStackNavigator<Routes>();
 
@@ -36,22 +38,24 @@ export function App(): React.ReactElement | null {
   const showPermissionsScreen = cameraPermission !== 'authorized';
   return (
     <NativeBaseProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            statusBarStyle: 'dark',
-            animationTypeForReplace: 'push',
-          }}
-          initialRouteName={showPermissionsScreen ? 'Permissions' : 'Home'}>
-          <Stack.Screen name="Permissions" component={PermissionsScreen} />
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+              statusBarStyle: 'dark',
+              animationTypeForReplace: 'push',
+            }}
+            initialRouteName={showPermissionsScreen ? 'Permissions' : 'Home'}>
+            <Stack.Screen name="Permissions" component={PermissionsScreen} />
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     </NativeBaseProvider>
   );
 }

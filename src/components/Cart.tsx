@@ -1,46 +1,20 @@
 import React, {useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {increment, decrement, remove} from '@app/constants/cartReducers';
+import counterSlice from '@app/constants/cartReducers';
 import {View, Text, FlatList, StyleSheet} from 'react-native';
 import {RenderCartItem} from './CartItem';
-import type {CartItem} from './CartItem';
+import type {CartItem, AppState} from './types';
 
 type CartScreenProps = {
   cartItems: CartItem[];
 };
 
-const CartScreen: React.FC<{props: CartScreenProps}> = ({props}) => {
-  const [items, setItems] = useState<CartItem[]>(props.cartItems);
-
-  const handleRemoveItem = (id: string) => {
-    setItems(items.filter(item => item.id !== id));
-  };
-
-  const handleIncrementItem = (id: string) => {
-    setItems(
-      items.map(item => {
-        if (item.id === id) {
-          return {
-            ...item,
-            quantity: item.quantity + 1,
-          };
-        }
-        return item;
-      }),
-    );
-  };
-
-  const handleDecrementItem = (id: string) => {
-    setItems(
-      items.map(item => {
-        if (item.id === id) {
-          return {
-            ...item,
-            quantity: item.quantity - 1,
-          };
-        }
-        return item;
-      }),
-    );
-  };
+const CartScreen: React.FC = () => {
+  const cartItems: CartItem[] = useSelector(
+    (state: AppState) => state.cart.cartItems,
+  );
+  const dispatch = useDispatch();
 
   const renderItem = ({item}: {item: CartItem}) => {
     return (
@@ -50,9 +24,9 @@ const CartScreen: React.FC<{props: CartScreenProps}> = ({props}) => {
         price={item.price}
         image={item.image}
         quantity={item.quantity}
-        onRemove={handleRemoveItem}
-        onIncrement={handleIncrementItem}
-        onDecrement={handleDecrementItem}
+        onRemove={id => dispatch(remove(id))}
+        onIncrement={id => dispatch(increment(id))}
+        onDecrement={id => dispatch(decrement(id))}
       />
     );
   };
@@ -60,19 +34,22 @@ const CartScreen: React.FC<{props: CartScreenProps}> = ({props}) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headingStyles}>My Cart</Text>
+        <View style={styles.headerColor}>
+          <Text style={styles.headingStyles}>My Cart</Text>
+        </View>
       </View>
-
-      <FlatList
-        data={items}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
+      <View style={styles.itemContainer}>
+        <FlatList
+          data={cartItems}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
+      </View>
       <View style={styles.total}>
         <Text style={styles.totalText}>Total:</Text>
         <Text style={styles.totalPrice}>
           $
-          {items
+          {cartItems
             .reduce((acc, item) => acc + item.price * item.quantity, 0)
             .toFixed(2)}
         </Text>
@@ -84,20 +61,27 @@ const CartScreen: React.FC<{props: CartScreenProps}> = ({props}) => {
 const styles = StyleSheet.create({
   header: {
     margin: 'auto',
-    width: '90%',
+    width: '100%',
     height: '15%',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 70,
+    paddingTop: '14%',
+  },
+  headerColor: {
+    width: '110%',
+    height: '110%',
   },
   headingStyles: {
-    fontSize: 20,
+    marginTop: '5%',
+    fontSize: 30,
+    alignSelf: 'center',
     fontWeight: '700',
     color: '#2F3841',
   },
   container: {
-    width: '99%',
+    padding: 5,
+    width: '100%',
     height: '100%',
     backgroundColor: '#ffffff',
     borderRadius: 20,
@@ -106,15 +90,23 @@ const styles = StyleSheet.create({
   total: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 3,
   },
   totalText: {
+    paddingLeft: 30,
     fontSize: 18,
     fontWeight: 'bold',
   },
   totalPrice: {
+    paddingRight: 20,
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  itemContainer: {
+    display: 'flex',
+    padding: 20,
+    width: '100%',
+    height: '80%',
   },
 });
 
